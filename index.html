@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Diseña tu invitación · Seroll</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="Crea y personaliza tu invitación digital de boda, XV años o baby shower.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:ital,wght@0,600;1,600&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/editor.css">
+  <link rel="stylesheet" href="css/invitation.css">
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  
+  <script type="module" src="js/main.js"></script>
+</head>
+<body>
+<header class="site-header">
+  <b class="brand">Seroll</b><span>Invitaciones digitales · Personaliza la tuya</span>
+  <nav class="site-nav"><a href="#" id="reset">Reiniciar</a></nav>
+</header>
+
+<main class="layout">
+  <section class="panel" aria-label="Editor">
+    <div class="tabs" role="tablist">
+      <button class="on" data-tab="t1">Diseño</button><button data-tab="t2">Evento</button>
+      <button data-tab="t3">Extras</button><button data-tab="t4">Invitados</button>
+    </div>
+
+    <div class="tab on" id="t1">
+      <label>Tipo de evento</label>
+      <select data-field="type"><option value="boda">Boda</option><option value="xv">XV años</option><option value="baby">Baby shower</option></select>
+      <label id="l1">Nombre</label><input data-field="n1">
+      <div id="w2"><label>Nombre de la pareja</label><input data-field="n2"></div>
+      <div class="row"><div><label>Fecha</label><input type="date" data-field="date"></div><div><label>Hora</label><input type="time" data-field="time"></div></div>
+      <label>Mensaje</label><textarea rows="4" data-field="msg"></textarea>
+      <label>Paleta de colores</label><div class="row" id="pal"></div>
+      <div class="row"><input type="color" data-field="bg" aria-label="Color de fondo"><input type="color" data-field="ac" aria-label="Color de acento"></div>
+      <label>O imagen de fondo desde tu galería</label>
+      <div class="row"><input type="file" data-upload="bgImg" accept="image/*"><button class="btn btn--ghost" data-clear="bgImg">Quitar</button></div>
+      <label>Canción de fondo</label><input type="file" data-upload="song" accept="audio/*">
+      <label>Galería de fotos (carrusel)</label>
+      <div class="row"><input type="file" data-upload="slides" accept="image/*" multiple><button class="btn btn--ghost" data-clear="slides">Borrar</button></div>
+      <div class="thumbs" id="th"></div>
+    </div>
+
+    <div class="tab" id="t2">
+      <h4>Padres y padrinos</h4>
+      <label>Padres</label><input data-field="padres" placeholder="Jonathan Flores &amp; Guadalupe Michaus">
+      <label>Padrinos</label><input data-field="padrinos" placeholder="Arturo González y Sonia Gómez">
+      <h4>Hashtag</h4><input data-field="tag" placeholder="#XVNancyPaola">
+      <h4>Itinerario</h4>
+      <div class="row"><input type="time" id="it_t" class="fixed"><input id="it_x" placeholder="Ceremonia, cena, baile…"><button class="btn" id="it_a">+</button></div>
+      <div id="itl"></div>
+      <h4>Cómo llegar · Ceremonia</h4>
+      <label>Nombre del lugar</label><input data-field="tn"><label>Link de Google Maps</label><input data-field="tl" placeholder="https://maps.google.com/...">
+      <label>Imagen</label><input type="file" data-upload="ti" accept="image/*">
+      <h4>Cómo llegar · Recepción</h4>
+      <label>Nombre del salón</label><input data-field="sn"><label>Link de Google Maps</label><input data-field="sl" placeholder="https://maps.google.com/...">
+      <label>Imagen</label><input type="file" data-upload="si" accept="image/*">
+    </div>
+
+    <div class="tab" id="t3">
+      <h4>Código de vestimenta</h4><input data-field="dress" placeholder="Etiqueta formal">
+      <label>Aviso importante (opcional)</label><input data-field="aviso" placeholder="El color rosa está reservado para la quinceañera">
+      <h4>Mesa de regalos</h4>
+      <label>Tienda</label>
+      <select data-field="gs"><option>Liverpool</option><option>Sears</option><option>Palacio de Hierro</option><option>Amazon</option><option>Otra</option></select>
+      <label>URL de la mesa</label><input data-field="gu" placeholder="https://...">
+      <label>Imagen del negocio (opcional)</label><input type="file" data-upload="gi" accept="image/*">
+      <h4>Confirmación</h4><label>Confirmar antes del</label><input type="date" data-field="rsvp">
+    </div>
+
+    <div class="tab" id="t4">
+      <label>URL base de tu invitación</label><input data-field="base" placeholder="https://tu-invitacion.vercel.app/">
+      <h4>Agregar invitado</h4>
+      <div class="row"><input id="gn" placeholder="idInvitado (nombre)"><input id="gf" placeholder="Familia"></div>
+      <label>Integrantes (separados por coma)</label><input id="gm" placeholder="Ana Pérez, Luis Pérez">
+      <div class="row"><input id="gp" placeholder="Teléfono (10 dígitos)" inputmode="tel"><button class="btn" id="add">Agregar</button></div>
+      <div class="scroll-x"><table><thead><tr><th>Invitado</th><th>Confirmó</th><th>Enviar</th><th></th></tr></thead><tbody id="gl"></tbody></table></div>
+      <div class="row"><button class="btn btn--ghost" id="cp">Copiar para Google Sheet</button></div>
+      <p class="note">Pega la tabla copiada en la celda A1 de tu hoja.</p>
+      <h4>Google Sheet incrustado</h4><input data-field="sheet" placeholder="Pega el link de tu Google Sheet">
+      <div id="sh"></div>
+    </div>
+    <div class="cta">
+      <button class="btn btn--block btn--outline" id="finBtn">👁 Ver mi invitación terminada</button>
+      <button class="btn btn--block" id="likeBtn">✅ Me encantó, enviar mi diseño</button></div>
+  </section>
+
+  <section aria-label="Vista previa">
+    <div class="vt"><button class="on" data-view="inv">Invitación</button><button data-view="conf">Pantalla de confirmación</button></div>
+    <div id="inv" class="preview"><div class="ov" id="ov"></div></div>
+  </section>
+</main>
+<dialog id="done" aria-labelledby="dlgTitle">
+  <h3 id="dlgTitle">¡Qué bueno que te gustó!</h3>
+  <p>Sigue estos dos pasos para que tu invitación quede publicada:</p>
+  <ol><li>Prepara tu diseño (se comprimen tus fotos).</li><li>Avisa por WhatsApp a tu diseñador y adjunta el archivo.</li></ol>
+  <p class="note" id="dlgMsg" role="status"></p>
+  <div class="row"><button class="btn" id="dlgSend" type="button">1. Preparar y compartir mi diseño</button><button class="btn" id="dlgWa" type="button">2. Avisar por WhatsApp</button></div>
+  <div class="row"><button class="btn btn--ghost" id="dlgCopy" type="button">Copiar código de diseño</button><button class="btn btn--ghost" id="dlgClose" type="button">Cerrar</button></div>
+</dialog>
+<dialog id="lead" aria-labelledby="leadTitle">
+  <h3 id="leadTitle">Ve tu invitación terminada</h3>
+  <form id="leadForm" novalidate>
+    <div id="leadStep1">
+      <p>Déjanos tus datos y te enviaremos un código por SMS para verificar tu número.</p>
+      <label for="leadName">Nombre</label><input id="leadName" name="leadName" autocomplete="name" maxlength="80" required>
+      <label for="leadPhone">Teléfono (10 dígitos)</label><input id="leadPhone" name="leadPhone" type="tel" inputmode="numeric" autocomplete="tel-national" maxlength="14" required>
+      <input class="hp" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <label class="check"><input type="checkbox" name="leadConsent"><span>Acepto que mis datos se usen para que mi diseñador me contacte sobre mi invitación.</span></label>
+    </div>
+    <div id="leadStep2" hidden>
+      <p>Escribe el código de 6 dígitos que te enviamos por SMS.</p>
+      <label for="leadCode">Código</label><input id="leadCode" name="leadCode" inputmode="numeric" autocomplete="one-time-code" maxlength="6">
+      <div class="row"><button class="btn btn--ghost" id="leadResend" type="button" disabled>Reenviar código</button><button class="btn btn--ghost" id="leadBack" type="button">Cambiar número</button></div>
+    </div>
+    <p class="note" id="leadMsg" role="alert"></p>
+    <div class="row"><button class="btn" id="leadSubmit" type="submit">Enviar código</button><button class="btn btn--ghost" id="leadCancel" type="button">Cancelar</button></div>
+    <div id="recaptcha"></div>
+  </form>
+</dialog>
+<div id="fs" class="fs" hidden role="dialog" aria-modal="true" aria-label="Invitación terminada">
+  <button class="fs__close" data-action="fs-close">✕ Volver al editor</button>
+  <div class="preview preview--full"><div class="ov"></div></div>
+</div>
+
+</body>
+</html>
